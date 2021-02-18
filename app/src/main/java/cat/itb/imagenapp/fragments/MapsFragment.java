@@ -31,8 +31,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 import cat.itb.imagenapp.R;
+import cat.itb.imagenapp.models.Marcador;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
@@ -42,6 +50,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapView;
     private GoogleMap gMap;
     private FloatingActionButton floatingActionButton;
+    DatabaseReference myRef;
+    private List<Marcador> marcadores;
+
 
     FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -62,6 +73,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState);
 
         mapView = rootView.findViewById(R.id.mapa);
+        myRef = FirebaseDatabase.getInstance().getReference().child("Marcadores");
         floatingActionButton = rootView.findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +104,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mapView.onResume();
             mapView.getMapAsync(this);
         }
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot s : dataSnapshot.getChildren()){
+                    Marcador marcador = s.getValue(Marcador.class);
+                    marcadores.add(marcador);
+                    for (int i = 0; i < marcadores.size(); i++) {
+
+                        //TODO Afegim cada marcador al mapa
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     private void pedirPermiso() {
@@ -151,6 +180,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
             }
         });    }
+        
+
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

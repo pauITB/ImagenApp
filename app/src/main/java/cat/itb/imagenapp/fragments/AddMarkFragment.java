@@ -56,7 +56,6 @@ public class AddMarkFragment extends Fragment {
     File url;
 
 
-//TODO Conectar FireBase y Storage https://drive.google.com/file/d/1AL35FD1ZGKODQQdmYIAiKfuVEZIo9KN7/view pg 9 
 
     public AddMarkFragment() {
     }
@@ -95,7 +94,7 @@ public class AddMarkFragment extends Fragment {
             }
         });
         //Conectarse a la base de datos
-        imgRef = FirebaseDatabase.getInstance().getReference().child("Fotos");
+        imgRef = FirebaseDatabase.getInstance().getReference().child("Marcadores");
         storageReference = FirebaseStorage.getInstance().getReference().child("img_comprimidas");
 
         addImageButton.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +128,7 @@ public class AddMarkFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 Uri downloadUri = task.getResult();
+                //TODO Modificar para subir Marcadores al Firebase
                 imgRef.push().child("urlfoto").setValue(downloadUri.toString());
                 Toast.makeText(getContext(),"Imagen Subida",Toast.LENGTH_SHORT).show();
             }
