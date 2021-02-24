@@ -91,10 +91,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null){
-                            Toast.makeText(getContext(),"Latitude"+location.getLatitude(),Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(),"Latitude"+location.getLatitude(),Toast.LENGTH_SHORT).show();
+                            Bundle bundle = new Bundle();
+                            bundle.putDouble("longitud",location.getLongitude());
+                            bundle.putDouble("latitud",location.getLatitude());
+                            AddMarkFragment fragment = new AddMarkFragment();
+                            fragment.setArguments(bundle);
+                            getParentFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
                         }
                     }
                 });
+
+
             }
         });
 
@@ -164,7 +172,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         gMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                Toast.makeText(getContext(),"Latitut:"+latLng.latitude,Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(),"Latitut:"+latLng.latitude,Toast.LENGTH_SHORT).show();
                 Bundle bundle = new Bundle();
                 bundle.putDouble("longitud",latLng.longitude);
                 bundle.putDouble("latitud",latLng.latitude);

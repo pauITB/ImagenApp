@@ -133,7 +133,7 @@ public class AddMarkFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 Uri downloadUri = task.getResult();
-                //TODO Modificar para subir Marcadores al Firebase
+
                 LatLng latLng = new LatLng(bundle.getDouble("latitud"),bundle.getDouble("longitud"));
                 Marcador marcador = new Marcador(nameEditText.getText().toString(),descriptionEditText.getText().toString(),downloadUri.toString(),latLng);
                 String key= imgRef.push().getKey();
