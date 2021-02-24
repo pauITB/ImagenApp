@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,6 +39,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import cat.itb.imagenapp.R;
+import cat.itb.imagenapp.models.Marcador;
 import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
@@ -54,7 +56,8 @@ public class AddMarkFragment extends Fragment {
     String nombreImagen;
     byte[] thumb_byte;
     File url;
-
+    Double longitud, latitud;
+    Bundle bundle;
 
 
     public AddMarkFragment() {
@@ -86,11 +89,13 @@ public class AddMarkFragment extends Fragment {
         addImageButton = rootView.findViewById(R.id.add_image_button);
         imageView = rootView.findViewById(R.id.imageView_imagen);
 
+        bundle = getArguments();
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 comprimirImagen();
                 subirImagen();
+
             }
         });
         //Conectarse a la base de datos
@@ -129,8 +134,13 @@ public class AddMarkFragment extends Fragment {
             public void onComplete(@NonNull Task<Uri> task) {
                 Uri downloadUri = task.getResult();
                 //TODO Modificar para subir Marcadores al Firebase
-                imgRef.push().child("urlfoto").setValue(downloadUri.toString());
+                LatLng latLng = new LatLng(bundle.getDouble("latitud"),bundle.getDouble("longitud"));
+                Marcador marcador = new Marcador(nameEditText.getText().toString(),descriptionEditText.getText().toString(),downloadUri.toString(),latLng);
+                String key= imgRef.push().getKey();
+                imgRef.child(key).setValue(marcador);
                 Toast.makeText(getContext(),"Imagen Subida",Toast.LENGTH_SHORT).show();
+                MapsFragment fragment = new MapsFragment();
+                getParentFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
             }
         });
     }

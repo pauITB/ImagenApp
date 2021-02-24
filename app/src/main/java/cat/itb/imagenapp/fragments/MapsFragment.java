@@ -105,22 +105,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mapView.getMapAsync(this);
         }
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot s : dataSnapshot.getChildren()){
-                    Marcador marcador = s.getValue(Marcador.class);
-                    marcadores.add(marcador);
-                    for (int i = 0; i < marcadores.size(); i++) {
-
-                        //TODO Afegim cada marcador al mapa
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot s : dataSnapshot.getChildren()){
+//                    Marcador marcador = s.getValue(Marcador.class);
+//                    marcadores.add(marcador);
+//                    for (int i = 0; i < marcadores.size(); i++) {
+//
+//                        //TODO Afegim cada marcador al mapa
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
     }
 
     private void pedirPermiso() {
