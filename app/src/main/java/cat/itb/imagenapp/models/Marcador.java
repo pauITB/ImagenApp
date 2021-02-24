@@ -6,19 +6,18 @@ public class Marcador {
     String nombre;
     String descripcion;
     String imagenURL;
-    LatLng latLng;
+    Double latitud;
+    Double longitud;
 
-    public Marcador(String nombre, String descripcion, String imagenURL, LatLng latLng) {
+    public Marcador() {
+    }
+
+    public Marcador(String nombre, String descripcion, String imagenURL, Double latitud, Double longitud) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.imagenURL = imagenURL;
-        this.latLng = latLng;
-    }
-
-    public Marcador(String nombre, String imagenURL, LatLng latLng) {
-        this.nombre = nombre;
-        this.imagenURL = imagenURL;
-        this.latLng = latLng;
+        this.latitud = latitud;
+        this.longitud = longitud;
     }
 
     public String getNombre() {
@@ -45,11 +44,5 @@ public class Marcador {
         this.imagenURL = imagenURL;
     }
 
-    public LatLng getLatLng() {
-        return latLng;
-    }
 
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
-    }
 }

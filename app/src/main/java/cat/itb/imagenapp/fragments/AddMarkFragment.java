@@ -56,7 +56,7 @@ public class AddMarkFragment extends Fragment {
     String nombreImagen;
     byte[] thumb_byte;
     File url;
-    Double longitud, latitud;
+
     Bundle bundle;
 
 
@@ -135,7 +135,7 @@ public class AddMarkFragment extends Fragment {
                 Uri downloadUri = task.getResult();
 
                 LatLng latLng = new LatLng(bundle.getDouble("latitud"),bundle.getDouble("longitud"));
-                Marcador marcador = new Marcador(nameEditText.getText().toString(),descriptionEditText.getText().toString(),downloadUri.toString(),latLng);
+                Marcador marcador = new Marcador(nameEditText.getText().toString(),descriptionEditText.getText().toString(),downloadUri.toString(),latLng.latitude,latLng.longitude);
                 String key= imgRef.push().getKey();
                 imgRef.child(key).setValue(marcador);
                 Toast.makeText(getContext(),"Imagen Subida",Toast.LENGTH_SHORT).show();
