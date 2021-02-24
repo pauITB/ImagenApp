@@ -117,6 +117,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot s : dataSnapshot.getChildren()){
+                    //TODO recoge null arreglar
                     Marcador marcador = s.getValue(Marcador.class);
                     marcadores.add(marcador);
                     for (int i = 0; i < marcadores.size(); i++) {
