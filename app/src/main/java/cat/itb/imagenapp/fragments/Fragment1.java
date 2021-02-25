@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DatabaseReference;
 
 import cat.itb.imagenapp.R;
 import cat.itb.imagenapp.SwipeToDeleteCallBack;
@@ -24,6 +25,7 @@ public class Fragment1 extends Fragment {
 
     RecyclerView rvMarcadors;
     MarcadorsAdapter myAdapter;
+    DatabaseReference myRef;
     public Fragment1() {
         // Required empty public constructor
     }
@@ -43,7 +45,8 @@ public class Fragment1 extends Fragment {
         rvMarcadors.setLayoutManager(new LinearLayoutManager(getContext()));
 
         FirebaseAPI firebaseAPI = new FirebaseAPI();
-        FirebaseRecyclerOptions<Marcador> options = new FirebaseRecyclerOptions.Builder<Marcador>().setQuery(firebaseAPI.getReference(),Marcador.class).build();
+        myRef = firebaseAPI.getReference();
+        FirebaseRecyclerOptions<Marcador> options = new FirebaseRecyclerOptions.Builder<Marcador>().setQuery(myRef,Marcador.class).build();
         myAdapter = new MarcadorsAdapter(options);
         myAdapter.setContext(getContext());
         rvMarcadors.setAdapter(myAdapter);
@@ -53,4 +56,15 @@ public class Fragment1 extends Fragment {
         return v;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        myAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        myAdapter.stopListening();
+    }
 }
