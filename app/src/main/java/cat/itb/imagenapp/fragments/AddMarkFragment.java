@@ -137,6 +137,7 @@ public class AddMarkFragment extends Fragment {
                 LatLng latLng = new LatLng(bundle.getDouble("latitud"),bundle.getDouble("longitud"));
                 Marcador marcador = new Marcador(nameEditText.getText().toString(),descriptionEditText.getText().toString(),downloadUri.toString(),latLng.latitude,latLng.longitude);
                 String key= imgRef.push().getKey();
+                marcador.setId(key);
                 imgRef.child(key).setValue(marcador);
                 Toast.makeText(getContext(),"Imagen Subida",Toast.LENGTH_SHORT).show();
                 MapsFragment fragment = new MapsFragment();

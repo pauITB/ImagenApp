@@ -3,6 +3,7 @@ package cat.itb.imagenapp.models;
 import com.google.android.gms.maps.model.LatLng;
 
 public class Marcador {
+    String id;
     String nombre;
     String descripcion;
     String imagenURL;
@@ -58,5 +59,13 @@ public class Marcador {
 
     public void setLongitud(Double longitud) {
         this.longitud = longitud;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

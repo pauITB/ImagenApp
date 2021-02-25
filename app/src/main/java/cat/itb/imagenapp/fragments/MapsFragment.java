@@ -10,12 +10,14 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -25,9 +27,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,7 +40,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import cat.itb.imagenapp.R;
@@ -51,7 +60,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap gMap;
     private FloatingActionButton floatingActionButton;
     DatabaseReference myRef;
-    private List<Marcador> marcadores;
+    private List<Marcador> marcadores = new ArrayList<>();
 
 
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -117,12 +126,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot s : dataSnapshot.getChildren()){
-                    //TODO recoge null arreglar
                     Marcador marcador = s.getValue(Marcador.class);
                     marcadores.add(marcador);
-                    for (int i = 0; i < marcadores.size(); i++) {
+                    for (Marcador m: marcadores){
+                        MarkerOptions marca = new MarkerOptions();
+                        marca.position(new LatLng(m.getLatitud(),m.getLongitud()));
+                        marca.title(m.getNombre());
+                        marca.snippet(m.getDescripcion());
+                        marca.draggable(false);
+                        //TODO Añadir fotos al marcador
+//                        InputStream is = null;
+//                        try {
+//                            is = (InputStream) new URL(m.getImagenURL()).getContent();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        Drawable d = Drawable.createFromStream(is, "src name");
 
-                        //TODO Afegim cada marcador al mapa
+
+//                        Picasso.with(getContext()).load(m.getImagenURL()).into();
+                gMap.addMarker(marca);
                     }
                 }
             }
