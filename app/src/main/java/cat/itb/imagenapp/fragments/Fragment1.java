@@ -100,7 +100,6 @@ public class Fragment1 extends Fragment implements MarcadorsAdapter.ItemClickLis
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getContext(),"Hola",Toast.LENGTH_SHORT).show();
         Bundle bundle = new Bundle();
         bundle.putDouble("longitud",marcadores.get(position).getLongitud());
         bundle.putDouble("latitud",marcadores.get(position).getLatitud());
