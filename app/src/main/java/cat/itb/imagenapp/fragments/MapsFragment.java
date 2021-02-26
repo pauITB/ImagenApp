@@ -60,7 +60,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap gMap;
     private FloatingActionButton floatingActionButton;
     DatabaseReference myRef;
-    private List<Marcador> marcadores = new ArrayList<>();
+    List<Marcador> marcadores = new ArrayList<>();
 
 
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -80,6 +80,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
 
         mapView = rootView.findViewById(R.id.mapa);
         myRef = FirebaseDatabase.getInstance().getReference().child("Marcadores");
@@ -124,7 +126,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot s : dataSnapshot.getChildren()){
                     Marcador marcador = s.getValue(Marcador.class);
                     marcadores.add(marcador);
@@ -189,7 +191,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         marker.draggable(false);
 
         gMap.addMarker(marker);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(itb).zoom(15).bearing(0).tilt(30).build();
+        Bundle bundle = getArguments();
+        CameraPosition cameraPosition;
+        if (bundle==null){
+             cameraPosition = new CameraPosition.Builder().target(itb).zoom(15).bearing(0).tilt(30).build();
+        }else {
+            LatLng target= new LatLng(bundle.getDouble("latitud"),bundle.getDouble("longitud"));
+            cameraPosition = new CameraPosition.Builder().target(target).zoom(15).bearing(0).tilt(30).build();
+        }
+
 
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
@@ -203,15 +213,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 AddMarkFragment fragment = new AddMarkFragment();
                 fragment.setArguments(bundle);
                 getParentFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
-//                MarkerOptions marca = new MarkerOptions();
-//                marca.position(latLng);
-//                dispatchTakePictureIntent();
-//                marca.icon(BitmapDescriptorFactory.fromBitmap(fotoMarca));
-//                marca.draggable(false);
-//                gMap.addMarker(marca);
 
             }
-        });    }
+        });
+    }
+
         
 
 
