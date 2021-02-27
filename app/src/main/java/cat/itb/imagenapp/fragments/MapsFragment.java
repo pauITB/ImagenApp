@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -83,9 +85,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
 
+
         mapView = rootView.findViewById(R.id.mapa);
         myRef = FirebaseDatabase.getInstance().getReference().child("Marcadores");
         floatingActionButton = rootView.findViewById(R.id.floatingActionButton);
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,9 +138,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                         MarkerOptions marca = new MarkerOptions();
                         marca.position(new LatLng(m.getLatitud(),m.getLongitud()));
                         marca.title(m.getNombre());
-                        marca.snippet(m.getDescripcion());
+                        marca.snippet(m.getImagenURL());
                         marca.draggable(false);
-                        //TODO Añadir fotos al marcador
+
 //                        InputStream is = null;
 //                        try {
 //                            is = (InputStream) new URL(m.getImagenURL()).getContent();
@@ -146,8 +150,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 //                        Drawable d = Drawable.createFromStream(is, "src name");
 
 
-//                        Picasso.with(getContext()).load(m.getImagenURL()).into();
-                gMap.addMarker(marca);
+                        gMap.addMarker(marca);
+                        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
+                                Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+
+                            pedirPermiso();
+                        }
+                        enableMyLocation();
                     }
                 }
             }
@@ -177,8 +187,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
 
-        gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
+//        gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        gMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(),R.raw.dark_map_style));
         gMap.setMaxZoomPreference(18);
         gMap.setMinZoomPreference(15);
 
@@ -203,6 +213,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+        gMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                View v = getLayoutInflater().inflate(R.layout.custom_info_window,null);
+                ImageView imageView = v.findViewById(R.id.foto_info_marca);
+                TextView titulo = v.findViewById(R.id.titulo_info_text_view);
+                String title = marker.getTitle();
+                Picasso.with(getContext()).load(marker.getSnippet()).into(imageView);
+                titulo.setText(title);
+                return v;
+            }
+        });
         gMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
